@@ -5,6 +5,6 @@ package com.example.aspros.draggridview.view;
  */
 public interface DragCallback
 {
-    void startDrag(int pisiiton);
+    void startDrag(int position);
     void endDrag(int position);
 }

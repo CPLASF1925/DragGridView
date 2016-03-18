@@ -55,6 +55,8 @@ public class DragGridView extends GridView
     private boolean isSwap;
 
 
+    private DragCallback dragCallback;
+
     public DragGridView(Context context)
     {
         this(context, null);
@@ -75,6 +77,11 @@ public class DragGridView extends GridView
     public DragAdapterInterface getInterface()
     {
         return (DragAdapterInterface) getAdapter();
+    }
+
+    public void setDragCallback(DragCallback dragCallback)
+    {
+        this.dragCallback=dragCallback;
     }
 
     @Override
@@ -104,6 +111,7 @@ public class DragGridView extends GridView
                     {
                         swapItems(x, y);
                     }
+                    handleScroll();
                     return false;
                 }
                 break;
@@ -120,11 +128,23 @@ public class DragGridView extends GridView
         return super.onTouchEvent(ev);
     }
 
-    public void resumeView()
+    public void clicked(int position)
     {
+        if(isEdit)
+        {
+            isEdit=false;
+            return;
+        }
+        resumeView();
+        LogUtil.i("点击 Item " + position);
+    }
+
+    private void resumeView()
+    {
+
         if (selectView != null)
         {
-            selectView.findViewById(R.id.delete_img).setVisibility(GONE);
+            selectView.findViewById(R.id.delete_img).setVisibility(INVISIBLE);
             selectView.findViewById(R.id.item_container).setVisibility(VISIBLE);
             selectView.findViewById(R.id.item_container).setBackgroundColor(Color.WHITE);
         }
@@ -138,13 +158,12 @@ public class DragGridView extends GridView
         }
 
         resumeView();
-
-        isDrag = true;
-        isEdit = true;
-
         selectView = getChildAt(position - getFirstVisiblePosition());
         if (selectView != null)
         {
+            isDrag = true;
+            isEdit = true;
+
             selectView.findViewById(R.id.item_container).setBackgroundColor(Color.parseColor("#f0f0f0"));
             selectView.findViewById(R.id.delete_img).setVisibility(VISIBLE);
 
@@ -157,6 +176,10 @@ public class DragGridView extends GridView
 
             selectView.findViewById(R.id.item_container).setVisibility(INVISIBLE);
 
+            if(dragCallback!=null)
+            {
+                dragCallback.startDrag(position);
+            }
 
         }
     }
@@ -168,7 +191,7 @@ public class DragGridView extends GridView
         if (endPosition != INVALID_POSITION && endPosition != currentPosition)
         {
             isSwap = true;
-
+            isEdit = false;
             resumeView();
 
             getInterface().reOrder(currentPosition, endPosition);
@@ -312,7 +335,6 @@ public class DragGridView extends GridView
             {
                 isDrag = false;
 
-                LogUtil.i(currentPosition+","+originPosition);
                 if (currentPosition != originPosition)
                 {
                     resumeView();
@@ -321,6 +343,12 @@ public class DragGridView extends GridView
 
                 hoverCell = null;
                 selectView.findViewById(R.id.item_container).setVisibility(VISIBLE);
+
+                if (dragCallback != null)
+                {
+                    dragCallback.endDrag(currentPosition);
+                }
+
             }
 
             @Override
@@ -360,6 +388,23 @@ public class DragGridView extends GridView
         Canvas canvas = new Canvas(bitmap);
         v.draw(canvas);
         return bitmap;
+    }
+
+    private void handleScroll()
+    {
+        int offset=computeVerticalScrollOffset();
+        int height=getHeight();
+        int extent=computeVerticalScrollExtent();
+        int range=computeHorizontalScrollRange();
+        if(currentRect.top<=0 && offset>0)
+        {
+            smoothScrollBy(-SCROLL_SPEED,0);
+        }
+        else
+        if(currentRect.bottom>=height && (offset+extent)<range)
+        {
+            smoothScrollBy(SCROLL_SPEED,0);
+        }
     }
 
     @Override

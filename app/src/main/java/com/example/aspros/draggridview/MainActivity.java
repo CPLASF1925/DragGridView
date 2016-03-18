@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.example.aspros.draggridview.view.DragCallback;
 import com.example.aspros.draggridview.view.DragGridView;
 
 import java.util.ArrayList;
@@ -38,6 +40,28 @@ public class MainActivity extends AppCompatActivity
         dragGridView.setAdapter(adapter);
 
 
+        dragGridView.setDragCallback(new DragCallback()
+        {
+            @Override
+            public void startDrag(int position)
+            {
+                LogUtil.i("start drag at " + position);
+            }
+
+            @Override
+            public void endDrag(int position)
+            {
+                LogUtil.i("end drag at " + position);
+            }
+        });
+        dragGridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                dragGridView.clicked(position);
+            }
+        });
         dragGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
             @Override
