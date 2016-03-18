@@ -2,6 +2,8 @@ package com.example.aspros.draggridview;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.example.aspros.draggridview.view.DragGridView;
 
@@ -35,5 +37,15 @@ public class MainActivity extends AppCompatActivity
         adapter.setDatas(datas);
         dragGridView.setAdapter(adapter);
 
+
+        dragGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                dragGridView.startDrag(position);
+                return false;
+            }
+        });
     }
 }

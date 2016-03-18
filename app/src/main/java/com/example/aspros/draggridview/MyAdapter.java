@@ -1,6 +1,7 @@
 package com.example.aspros.draggridview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class MyAdapter extends BaseAdapter implements DragAdapterInterface
             holder.deleteImg= (ImageView) convertView.findViewById(R.id.delete_img);
             holder.iconImg= (ImageView) convertView.findViewById(R.id.icon_img);
             holder.nameTv= (TextView) convertView.findViewById(R.id.name_tv);
+            holder.container=convertView.findViewById(R.id.item_container);
 
             convertView.setTag(holder);
         }
@@ -77,8 +79,10 @@ public class MyAdapter extends BaseAdapter implements DragAdapterInterface
                 notifyDataSetChanged();
             }
         });
-        holder.iconImg.setImageResource(icons[bean%10]);
-        holder.nameTv.setText("Item "+bean);
+        holder.deleteImg.setVisibility(View.GONE);
+        holder.iconImg.setImageResource(icons[bean % 10]);
+        holder.nameTv.setText("Item " + bean);
+        holder.container.setBackgroundColor(Color.WHITE);
         return convertView;
     }
 
@@ -87,6 +91,7 @@ public class MyAdapter extends BaseAdapter implements DragAdapterInterface
         public ImageView deleteImg;
         public ImageView iconImg;
         public TextView nameTv;
+        public View container;
     }
     @Override
     public void reOrder(int startPosition, int endPosition)

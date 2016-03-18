@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/item_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -43,11 +46,4 @@
             android:src="@drawable/delete_icon"
             android:visibility="gone"/>
     </FrameLayout>
-
-    <View
-        android:id="@+id/mask_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:visibility="gone"/>
-</FrameLayout>
+</LinearLayout>
