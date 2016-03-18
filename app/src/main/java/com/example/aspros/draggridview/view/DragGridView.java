@@ -157,13 +157,18 @@ public class DragGridView extends GridView
             return;
         }
 
+        //恢复之前的图像,改变背景,去除删除按钮
         resumeView();
+
         selectView = getChildAt(position - getFirstVisiblePosition());
         if (selectView != null)
         {
             isDrag = true;
             isEdit = true;
 
+            /**
+             * 移动的图像背景要有区别,并显示删除按钮
+             */
             selectView.findViewById(R.id.item_container).setBackgroundColor(Color.parseColor("#f0f0f0"));
             selectView.findViewById(R.id.delete_img).setVisibility(VISIBLE);
 
@@ -172,6 +177,7 @@ public class DragGridView extends GridView
 
             vibrator.vibrate(60);
 
+            //获取图像
             hoverCell = getHoverCell(selectView);
 
             selectView.findViewById(R.id.item_container).setVisibility(INVISIBLE);
@@ -194,6 +200,7 @@ public class DragGridView extends GridView
             isEdit = false;
             resumeView();
 
+            //交换数据内容
             getInterface().reOrder(currentPosition, endPosition);
 
             selectView=getChildAt(endPosition-getFirstVisiblePosition());
@@ -201,6 +208,7 @@ public class DragGridView extends GridView
             selectView.findViewById(R.id.item_container).setBackgroundColor(Color.parseColor("#f0f0f0"));
             selectView.findViewById(R.id.delete_img).setVisibility(VISIBLE);
 
+            //动画显示交换过程
             animateSwap(endPosition);
 
 
